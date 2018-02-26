@@ -19,7 +19,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
- 
+
 <body onload="window.print();">
 <div class="wrapper">
   <!-- Main content -->
@@ -48,7 +48,7 @@
           <div class="box">
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-              
+
               <table class="table table-hover">
                   <thead>
                       <th class="text-center">No</th>
@@ -56,22 +56,26 @@
                       <th class="text-center">Keterangan</th>
                       <th class="text-center">Jumlah Uang</th>
                   </thead>
-                  <tfoot>
+                <tbody>
+                <?php $no =1; ?>
+                @for($i=0;$i < count($invoice_id);$i++)
+                      <tr>
+                        <td align="center">{{ $no++ }}</td>
+                        <td style="font-size: 15px">{{ date('d-m-Y', strtotime($invoice_id[$i]['tgl_pemasukan'])) }}</td>
+                        <td style="font-size: 12px">
+                          @foreach($pemasukan as $data)
+                            {{ $data['keterangan'] }}
+                          @endforeach
+                        </td>
+                        <td style="font-size: 12px">Rp. {{ number_format($invoice_id[$i]['jumlah_uang']) }}</td>
+                      </tr>
+                @endfor
+                </tbody>
+                <tfoot>
                       <th colspan="2"></th>
                       <th class="text-center">Total</th>
-                      <th class="text-right">Rp. {{ number_format($pemasukan->sum('jumlah_uang')) }}</th>
+                      <th class="text-right">Rp. {{ number_format($total) }}</th>
                   </tfoot>
-                <tbody> 
-                <?php $no =1; ?>
-                @foreach($pemasukan as $data)
-                      <tr>                  
-                        <td align="center">{{ $no++ }}</td>
-                        <td align="center">{{ date('d-F-Y', strtotime($data['tgl_pemasukan'])) }}</td>
-                        <td align="center">{{ $data['keterangan'] }}</td>
-                        <td align="right">Rp. {{ number_format($data['jumlah_uang']) }}</td>
-                      </tr>
-                    @endforeach
-                </tbody>
               </table>
             </div>
             <!-- /.box-body -->
@@ -81,7 +85,7 @@
       </div>
     <!-- /.row -->
 
-    
+
     <!-- /.row -->
   </section>
   <!-- /.content -->

@@ -11,6 +11,7 @@ class Pemasukan extends Model
         'tgl_pemasukan',
         'jumlah_uang',
         'keterangan',
+        'invoice_id'
     ];
 
     public $timestamps = false;

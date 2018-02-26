@@ -20,18 +20,30 @@
               <tr>
                 <th class="tg-3wr7">No.<br></th>
                 <th class="tg-3wr7">Tanggal Pemasukan<br></th>
-                <th class="tg-3wr7">Jumlah Uang<br></th>
                 <th class="tg-3wr7">Keterangan<br></th>
+                <th class="tg-3wr7">Jumlah Uang<br></th>
               </tr>
               <?php $no = 1; ?>
-            @for ($i = 0; $i < count($pemasukan); $i++)
+            @for ($i = 0; $i < count($invoice_id); $i++)
               <tr>
-                <td class="tg-rv4w" width="7%">{{ $no++ }}</td>
-                <td class="tg-rv4w" width="30%">{{date('d-F-Y', strtotime($pemasukan[$i]['tgl_pemasukan'])) }}</td>
-                <td class="tg-rv4w" width="30%">Rp. {{ number_format($pemasukan[$i]['jumlah_uang']) }}</td>
-                <td class="tg-rv4w" width="30%">{{$pemasukan[$i]['keterangan'] }}</td>
+                <td class="tg-rv4w" width="5%">{{ $no++ }}</td>
+                <td class="tg-rv4w" width="10%">{{date('d-m-Y', strtotime($invoice_id[$i]['tgl_pemasukan'])) }}</td>
+                <td class="tg-rv4w" width="50%">
+                  @foreach($pemasukan as $data)
+                    {{$pemasukan[$i]['keterangan'] }}
+                  @endforeach
+                </td>
+                <td class="tg-rv4w" width="15%">Rp. {{ number_format($invoice_id[$i]['jumlah_uang']) }}</td>
               </tr>
               @endfor
+              <tfoot>
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>&nbsp;</th>
+                  <th class="tg-3wr7" style="text-align: left;">Total Pemasukan</th>
+                  <th class="tg-3wr7" style="text-align: left;">Rp. {{number_format($total)}}</th>
+                </tr>
+              </tfoot>
             </table>
         </body>
     </head>

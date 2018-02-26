@@ -82,7 +82,15 @@ class KeuanganController extends Controller
             $excel->sheet('Pemasukan Bulan ' . $request->bulan . ' Tahun '. $request->tahun, function ($sheet)  use($request){
                 $pemasukan = Pemasukan::whereMonth('tgl_pemasukan', $request->bulan)
                                           ->whereYear('tgl_pemasukan', $request->tahun)
-                                          ->get()->toArray();
+                                          ->get();
+                $invoice_id = Pemasukan::whereMonth('tgl_pemasukan', '=', $request->bulan)
+                                    ->whereYear('tgl_pemasukan', '=', $request->tahun)
+                                    ->groupBy('invoice_id')
+                                    ->get()->toArray();
+                $total =  Pemasukan::whereMonth('tgl_pemasukan', $request->bulan)
+                                          ->whereYear('tgl_pemasukan', $request->tahun)
+                                          ->groupBy('invoice_id')
+                                          ->get()->sum('jumlah_uang');
                 $arr = array();
                 foreach ($pemasukan as $data) {
                     $data_arr = array(
@@ -92,11 +100,12 @@ class KeuanganController extends Controller
                     );
                     array_push($arr, $data_arr);
                 }
-                $sheet->fromArray($arr, null, 'A1', false, false)->prependRow(array(
-                    'Tanggal Pemasukan',
-                    'Jumlah Uang',
-                    'Keterangan'
-                ));
+                // $sheet->fromArray($arr, null, 'A1', false, false)->prependRow(array(
+                //     'Tanggal Pemasukan',
+                //     'Jumlah Uang',
+                //     'Keterangan'
+                // ));
+                $sheet->loadView('keuangan.pemasukan.excel', ['pemasukan' => $pemasukan, 'bulan' => $request->bulan, 'tahun' => $request->tahun, 'total' => $total, 'invoice_id' => $invoice_id]);
             });
         })->download($type);
    }
@@ -107,9 +116,17 @@ class KeuanganController extends Controller
 
          $pemasukan = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
                                     ->whereYear('tgl_pemasukan', '=', $tahun)
+                                    ->get();
+         $invoice_id = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
+                                    ->whereYear('tgl_pemasukan', '=', $tahun)
+                                    ->groupBy('invoice_id')
                                     ->get()->toArray();
+          $total = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
+                                    ->whereYear('tgl_pemasukan', '=', $tahun)
+                                    ->groupBy('invoice_id')
+                                    ->get()->sum('jumlah_uang');
             // dd($pemasukan);
-         $pdf = PDF::loadView('keuangan.pemasukan.pdf', ['pemasukan' => $pemasukan, 'bulan' => $bulan, 'tahun' => $tahun])->setPaper('a4');
+         $pdf = PDF::loadView('keuangan.pemasukan.pdf', ['total' => $total,'pemasukan' => $pemasukan, 'bulan' => $bulan, 'tahun' => $tahun, 'invoice_id' => $invoice_id])->setPaper('a4');
         // $pdf = PDF::render();
         return $pdf->stream('Data Pemasukan ' . $bulan .'-'. $tahun  . '.pdf');
    }
@@ -121,8 +138,18 @@ class KeuanganController extends Controller
          $pemasukan = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
                                     ->whereYear('tgl_pemasukan', '=', $tahun)
                                     ->get();
-            // dd($pemasukan->sum('jumlah_uang'));
+         $invoice_id = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
+                                    ->whereYear('tgl_pemasukan', '=', $tahun)
+                                    ->groupBy('invoice_id')
+                                    ->get()->toArray();
+         $total = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
+                                    ->whereYear('tgl_pemasukan', '=', $tahun)
+                                    ->groupBy('invoice_id')
+                                    ->get()->sum('jumlah_uang');
+            // dd($invoice_id);
             return view('keuangan.pemasukan.print', [
+                    'total' => $total,
+                    'invoice_id' => $invoice_id,
                     'pemasukan' => $pemasukan,
                     'bulan' => $bulan,
                     'tahun' => $tahun

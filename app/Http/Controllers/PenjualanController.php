@@ -99,6 +99,7 @@ class PenjualanController extends Controller
     }
 
     public function postTransaksi(Request $request) {
+        // dd($request->all());
     	$barang_id = $request['barang_id'];
     	$tgl_transaksi = $request['tgl_transaksi'];
     	$jumlah_bayar = $request['jumlah_bayar'];
@@ -106,30 +107,33 @@ class PenjualanController extends Controller
         $id_pelanggan = $request['id_pelanggan'];
     	$qty = $request['qty'];
     	$invoice_id = $request['invoice_id'];
-            $kembalian = $request['kembalian'];
-            // dd($invoice_id[0]);
+        $kembalian = $request['kembalian'];
+        $nBarang = [];
     	for ($i=0; $i < count($barang_id); $i++) {
-    		$barang = Barang::find($barang_id[$i]);
+    		$barang = Barang::with('kategori')->find($barang_id[$i]);
     		$jumlahStokBaru = $barang->stok - $qty[$i];
     		$barang->update(['stok' => $jumlahStokBaru]);
     		$transaksi = Transaksi::create([
     			'barang_id' => $barang_id[$i],
     			'tgl_transaksi' => $tgl_transaksi,
                 'invoice_id' => $invoice_id[$i],
-    			'invoice_id' => $invoice_id[$i],
                 'id_pelanggan' => $id_pelanggan,
     			'qty' => $qty[$i],
     			'jumlah_bayar' => $jumlah_bayar,
     			'total_bayar' => $total_bayar,
                 'kembalian' => $kembalian,
     		]);
-    	}
-
+            $b = $barang->kategori->kategori . ' '. $barang->nama_barang .' (qty: ' . $qty[$i] . ')';
             Pemasukan::create([
                     'tgl_pemasukan' => $request['tgl_transaksi'],
                     'jumlah_uang' => $request['jumlah_bayar'],
-                    'keterangan' => 'Transaksi oleh ' . $invoice_id[0],
+                    'invoice_id' => $transaksi->invoice_id,
+                    'keterangan' => 'Transaksi oleh ' . $invoice_id[0] . ', Dari penjualan barang '.$b
             ]);
+            // array_push($nBarang, $b);
+    	}
+        // $test = json_encode($nBarang);
+        // $str = $json = str_replace(['"', '[', ']'],'', (string) $test);
 
             $transaksi = Transaksi::with('barang')->where('invoice_id', '=', $invoice_id)->get()->toArray();
             if ($id_pelanggan) {
