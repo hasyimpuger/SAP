@@ -11,6 +11,7 @@
               </tr>
               <tr>
                 <th>No.<br></th>
+                <th>Kode Invoice/Nota<br></th>
                 <th>Tanggal Pemasukan<br></th>
                 <th>Keterangan<br></th>
                 <th>Jumlah Uang<br></th>
@@ -19,10 +20,14 @@
            @for($i=0;$i < count($invoice_id);$i++)
                       <tr>
                         <td>{{ $no++ }}</td>
+                        <td>{{$invoice_id[$i]['invoice_id']}}</td>
                         <td>{{ date('d-m-Y', strtotime($invoice_id[$i]['tgl_pemasukan'])) }}</td>
                         <td>
+                          Dari penjualan
                           @foreach($pemasukan as $data)
-                            {{ $data['keterangan'] }}
+                            @if($data['invoice_id'] == $invoice_id[$i]['invoice_id'])
+                            {{ $data['keterangan'] }},
+                            @endif
                           @endforeach
                         </td>
                         <td>Rp. {{ number_format($invoice_id[$i]['jumlah_uang']) }}</td>
@@ -30,6 +35,7 @@
                 @endfor
               <tfoot>
                 <tr>
+                  <th>&nbsp;</th>
                   <th>&nbsp;</th>
                   <th>&nbsp;</th>
                   <th style="text-align: left;">Total Pemasukan</th>

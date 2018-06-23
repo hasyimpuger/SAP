@@ -2,7 +2,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Tambah Data Transaksi</h3>
-        </div> 
+        </div>
         <div class="panel-body">
             <form action="{{ route('getDataTransaksi') }}" method="post" id="frm-barang2">
                 {{ csrf_field() }}
@@ -24,8 +24,8 @@
                         <div class="form-group">
                             <label for="">Nama Pelanggan</label>
                             <select class="form-control select2" style="width: 100% !important" name="id_pelanggan">
+                                <option disabled="" selected="">-Pilih-</option>
                                 @foreach($pelanggan as $data)
-                                    <option disabled="" selected="">-Pilih-</option>
                                     <option value="{{ $data['id'] }}"
                                     >{{ $data['nama'] }}</option>
                                 @endforeach
@@ -50,7 +50,7 @@
                                 </tr>
                             </tfoot> --}}
                             <tbody id="selected-barang-2">
-                                
+
                             </tbody>
 
                         </table>
@@ -62,4 +62,4 @@
             </form>
         </div>
     </div>
-</div> 
+</div>

@@ -53,6 +53,7 @@
 						<thead>
 							<tr>
 								<th>No.</th>
+								<th>Kode Invoice/Nota</th>
 								<th>Tanggal Pemasukan</th>
 								<th>Jumlah Uang</th>
 								<th>Keterangan</th>
@@ -64,6 +65,7 @@
 							@foreach ($pemasukan->toArray() as $data)
 							<tr>
 								<td>{{ $no++ }}</td>
+								<td>{{$data['invoice_id']}}</td>
 								<td>{{ date('d/F/Y', strtotime($data['tgl_pemasukan'])) }}</td>
 								<td>Rp. {{ number_format($data['jumlah_uang']) }}</td>
 								<td>{{ $data['keterangan'] }}</td>

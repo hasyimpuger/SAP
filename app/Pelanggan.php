@@ -8,5 +8,9 @@ class Pelanggan extends Model
 {
     protected $table = 'pelanggans';
 
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];
+
+    public function transaksi() {
+    	return $this->hasMany('App\Transaksi', 'pelanggan_id', 'id');
+    }
 }

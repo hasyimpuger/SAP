@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class HistoryStok extends Model
 {
-    protected $table = 'historyStok';
+    protected $table = 'historystok';
 
     protected $guarded = ['id'];
 

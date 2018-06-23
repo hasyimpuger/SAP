@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Laba;
 use App\Pemasukan;
 use App\Pengeluaran;
 use Excel;
+use Illuminate\Http\Request;
 use PDF;
 
 class KeuanganController extends Controller
@@ -38,8 +39,12 @@ class KeuanganController extends Controller
       //          ->whereMonth('tgl_pengeluaran', date('m'))
       //          ->whereYear('tgl_pengeluaran', date('Y'))
       //          ->get();
-      $laba = $a->sum('jumlah_uang') - $b->sum('jumlah_uang');
-
+      // $laba = $a->sum('jumlah_uang') - $b->sum('jumlah_uang');
+      $laba = Laba::select([
+        'tgl_masuk',
+        'laba_masuk'
+      ])->whereMonth('tgl_masuk', date('m'))->sum('laba_masuk');
+      // dd($a->sum('jumlah_uang'));
 
      	return view('keuangan.index', [
             'pemasukan' => $pemasukan,
@@ -134,14 +139,13 @@ class KeuanganController extends Controller
    public function exportPrintPemasukan(Request $request) {
         $bulan = $request->bulan;
          $tahun = $request->tahun;
-
-         $pemasukan = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
-                                    ->whereYear('tgl_pemasukan', '=', $tahun)
-                                    ->get();
-         $invoice_id = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
+          $invoice_id = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
                                     ->whereYear('tgl_pemasukan', '=', $tahun)
                                     ->groupBy('invoice_id')
                                     ->get()->toArray();
+         $pemasukan = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
+                                    ->whereYear('tgl_pemasukan', '=', $tahun)
+                                    ->get();
          $total = Pemasukan::whereMonth('tgl_pemasukan', '=', $bulan)
                                     ->whereYear('tgl_pemasukan', '=', $tahun)
                                     ->groupBy('invoice_id')

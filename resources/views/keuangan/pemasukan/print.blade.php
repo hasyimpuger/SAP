@@ -52,6 +52,7 @@
               <table class="table table-hover">
                   <thead>
                       <th class="text-center">No</th>
+                      <th class="text-center">Kode Invoice/Nota</th>
                       <th class="text-center">Tanggal</th>
                       <th class="text-center">Keterangan</th>
                       <th class="text-center">Jumlah Uang</th>
@@ -61,10 +62,14 @@
                 @for($i=0;$i < count($invoice_id);$i++)
                       <tr>
                         <td align="center">{{ $no++ }}</td>
+                        <td>{{ $invoice_id[$i]['invoice_id'] }}</td>
                         <td style="font-size: 15px">{{ date('d-m-Y', strtotime($invoice_id[$i]['tgl_pemasukan'])) }}</td>
                         <td style="font-size: 12px">
+                          Dari penjualan
                           @foreach($pemasukan as $data)
-                            {{ $data['keterangan'] }}
+                            @if($data['invoice_id'] == $invoice_id[$i]['invoice_id'])
+                            {{ $data['keterangan'] }},
+                            @endif
                           @endforeach
                         </td>
                         <td style="font-size: 12px">Rp. {{ number_format($invoice_id[$i]['jumlah_uang']) }}</td>
@@ -72,7 +77,7 @@
                 @endfor
                 </tbody>
                 <tfoot>
-                      <th colspan="2"></th>
+                      <th colspan="3"></th>
                       <th class="text-center">Total</th>
                       <th class="text-right">Rp. {{ number_format($total) }}</th>
                   </tfoot>

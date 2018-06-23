@@ -135,7 +135,6 @@
 		const nama = $(this).data('nama');
 		const no_hp = $(this).data('no_hp');
 		const alamat = $(this).data('alamat');
-
 		$('#modal-edit').find('#id').val(id);
 		$('#modal-edit').find('#nama').val(nama);
 		$('#modal-edit').find('#no_hp').val(no_hp);
@@ -153,20 +152,20 @@
 	$('#mytable').on('click', '.delete', function() {
 		const id = $(this).data('id');
 		$.confirm({
-                    title: 'Alert !',
-                    content: 'Apakah anda ingin menghapus data ini ?',
-                    buttons: {
-                        confirm: function () {
-                            $.post("{{ route('pelanggan.destroy') }}", {id: id}, function (data) {
+title: 'Alert !',
+content: 'Apakah anda ingin menghapus data ini ?',
+buttons: {
+confirm: function () {
+$.post("{{ route('pelanggan.destroy') }}", {id: id}, function (data) {
 								$('#mytable').DataTable().ajax.reload();
-                                toastr.success('Success !', 'Data berhasil di hapus');
-                            });
-                        },
-                        cancel: function () {
-                            $.alert('Batal!');
-                        },
-                    }
-                });
+toastr.success('Success !', 'Data berhasil di hapus');
+});
+},
+cancel: function () {
+$.alert('Batal!');
+},
+}
+});
 	})
 </script>
 @endsection

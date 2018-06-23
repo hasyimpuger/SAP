@@ -23,7 +23,8 @@ class PelangganController extends Controller
         $pelanggan = Pelanggan::get()->toArray();
          $datatables = DataTables::of($pelanggan)
             ->addColumn('action', function($pelanggan) {
-                return '<a href="#modal-edit" data-toggle="modal" class="btn btn-warning btn-md edit"
+                return '<a href="'.route("pelanggan.transaksi", $pelanggan['id']).'" class="btn btn-info btn-md"><i class="fa fa-search"></i> Detail transaksi</a>&nbsp;
+                <a href="#modal-edit" data-toggle="modal" class="btn btn-warning btn-md edit"
                         data-id="'.$pelanggan['id'].'"
                         data-nama="'.$pelanggan['nama'].'"
                         data-no_hp="'.$pelanggan['no_hp'].'"

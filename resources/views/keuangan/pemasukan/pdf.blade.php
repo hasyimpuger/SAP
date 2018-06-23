@@ -19,6 +19,7 @@
             <table class="tg">
               <tr>
                 <th class="tg-3wr7">No.<br></th>
+                <th class="tg-3wr7">Kode Invoice/Nota<br></th>
                 <th class="tg-3wr7">Tanggal Pemasukan<br></th>
                 <th class="tg-3wr7">Keterangan<br></th>
                 <th class="tg-3wr7">Jumlah Uang<br></th>
@@ -27,10 +28,14 @@
             @for ($i = 0; $i < count($invoice_id); $i++)
               <tr>
                 <td class="tg-rv4w" width="5%">{{ $no++ }}</td>
+                <td class="tg-rv4w" width="5%">{{ $invoice_id[$i]['invoice_id'] }}</td>
                 <td class="tg-rv4w" width="10%">{{date('d-m-Y', strtotime($invoice_id[$i]['tgl_pemasukan'])) }}</td>
                 <td class="tg-rv4w" width="50%">
+                  Dari penjualan
                   @foreach($pemasukan as $data)
-                    {{$pemasukan[$i]['keterangan'] }}
+                      @if($data['invoice_id'] == $invoice_id[$i]['invoice_id'])
+                        {{ $data['keterangan'] }},
+                      @endif
                   @endforeach
                 </td>
                 <td class="tg-rv4w" width="15%">Rp. {{ number_format($invoice_id[$i]['jumlah_uang']) }}</td>
@@ -38,6 +43,7 @@
               @endfor
               <tfoot>
                 <tr>
+                  <th>&nbsp;</th>
                   <th>&nbsp;</th>
                   <th>&nbsp;</th>
                   <th class="tg-3wr7" style="text-align: left;">Total Pemasukan</th>

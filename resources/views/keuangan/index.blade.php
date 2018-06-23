@@ -101,7 +101,7 @@
     </div>
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <!-- small box -->
-        <a href="#!">
+        <a href="{{route('laba.index')}}">
             <div class="small-box bg-blue">
                 <div class="inner">
                     <h3>Laba Bulan Ini</h3>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\Ecpos;
+use App\Laba;
 use App\PTrans;
 use App\Pelanggan;
 use App\Pemasukan;
@@ -112,26 +113,40 @@ class PenjualanController extends Controller
     	for ($i=0; $i < count($barang_id); $i++) {
     		$barang = Barang::with('kategori')->find($barang_id[$i]);
     		$jumlahStokBaru = $barang->stok - $qty[$i];
-    		$barang->update(['stok' => $jumlahStokBaru]);
+    		// $barang->update(['stok' => $jumlahStokBaru]);
+            $laba_masuk = (((float)$barang['harga_jual'] - (float)$barang['harga_beli']) *
+                $qty[$i]);
+            $laba = new Laba;
+            $laba->invoice_id = $invoice_id[$i];
+            $laba->tgl_masuk = $tgl_transaksi;
+            $laba->laba_masuk = $laba_masuk;
+            $laba->save();
+
     		$transaksi = Transaksi::create([
     			'barang_id' => $barang_id[$i],
     			'tgl_transaksi' => $tgl_transaksi,
                 'invoice_id' => $invoice_id[$i],
-                'id_pelanggan' => $id_pelanggan,
+                'pelanggan_id' => $id_pelanggan,
     			'qty' => $qty[$i],
     			'jumlah_bayar' => $jumlah_bayar,
     			'total_bayar' => $total_bayar,
                 'kembalian' => $kembalian,
     		]);
-            $b = $barang->kategori->kategori . ' '. $barang->nama_barang .' (qty: ' . $qty[$i] . ')';
-            Pemasukan::create([
-                    'tgl_pemasukan' => $request['tgl_transaksi'],
-                    'jumlah_uang' => $request['jumlah_bayar'],
-                    'invoice_id' => $transaksi->invoice_id,
-                    'keterangan' => 'Transaksi oleh ' . $invoice_id[0] . ', Dari penjualan barang '.$b
-            ]);
-            // array_push($nBarang, $b);
+            $b = $barang->kategori->kategori . ' '. $barang->nama_barang .
+                ' (qty: ' . $qty[$i] . ')';
+
+            array_push($nBarang, $b);
     	}
+
+        // dd($nBarang);
+
+        $test = implode(", ", $nBarang);
+        $pemasukan = new Pemasukan;
+        $pemasukan->tgl_pemasukan = $request['tgl_transaksi'];
+        $pemasukan->jumlah_uang = $request['jumlah_bayar'];
+        $pemasukan->invoice_id = $transaksi->invoice_id;
+        $pemasukan->keterangan = $test;
+        $pemasukan->save();
         // $test = json_encode($nBarang);
         // $str = $json = str_replace(['"', '[', ']'],'', (string) $test);
 

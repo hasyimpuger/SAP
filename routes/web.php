@@ -89,6 +89,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/pengeluaran/PDF', ['uses' => 'KeuanganController@exportPDFPengeluaran', 'as' => 'exportPDFPengeluaran']);
         Route::post('/pengeluaran/Print', ['uses' => 'KeuanganController@exportPrintPengeluaran', 'as' => 'exportPrintPengeluaran']);
 
+        // Laba
+        Route::get('/laba', 'LabaController@index')->name('laba.index');
+        Route::get('/laba/transaksi', 'LabaController@getLabaTransaksi')
+            ->name('laba.transaksi');
+
     });
 
     Route::group(['middleware' => 'admin'], function() {
@@ -97,6 +102,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/pelanggan/store', 'PelangganController@store')->name('pelanggan.store');
         Route::post('/pelanggan/update', 'PelangganController@update')->name('pelanggan.update');
         Route::post('/pelanggan/delete', 'PelangganController@destroy')->name('pelanggan.destroy');
+
+        // transaksi Pelanggan
+        Route::get('/pelanggan/{id}/transaksi', 'PelangganTransaksiController@index')->name('pelanggan.transaksi');
+        Route::get('/pelanggan/{id}/transaksi/data', 'PelangganTransaksiController@getDataPelangganTransaksi')->name('pelanggan.transaksi.data');
+        Route::get('/pelanggan/{id}/transaksi/barang', 'PelangganTransaksiController@getDataBarang')->name('pelanggan.transaksi.barang');
 
          Route::group(['prefix' => 'setting'], function() {
                 //Setting
