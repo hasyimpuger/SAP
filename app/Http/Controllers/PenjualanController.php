@@ -113,7 +113,7 @@ class PenjualanController extends Controller
     	for ($i=0; $i < count($barang_id); $i++) {
     		$barang = Barang::with('kategori')->find($barang_id[$i]);
     		$jumlahStokBaru = $barang->stok - $qty[$i];
-    		// $barang->update(['stok' => $jumlahStokBaru]);
+    		$barang->update(['stok' => $jumlahStokBaru]);
             $laba_masuk = (((float)$barang['harga_jual'] - (float)$barang['harga_beli']) *
                 $qty[$i]);
             $laba = new Laba;
